@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title> My To Do List
+    </title>
+    <script src="https://unpkg.com/htmx.org@1.9.3"></script>
+    <style>
+
+        :root {
+            --gutter : 0.5em;
+        }
+        body {
+            padding: var(--gutter)
+        }
+
+        .line {
+
+            border-top: 1px solid black;
+            margin-top: var(--gutter);
+            padding-top: var(--gutter);
+
+        }
+
+        .title input[type=text] {
+            width: calc(100% - var(--gutter));
+        }
+
+        .todo {
+
+            grid-gap:  var(--gutter) ;
+            display: grid;
+            grid: 'id  title buttons';
+            grid-template-columns: 3vw auto 20vw;
+        }
+
+
+        .todo .buttons {
+            grid-area: buttons;
+        }
+
+        .todo .title {
+            grid-area: title;
+            text-align: left;
+
+        }
+
+        .todo .id {
+            grid-area: id;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+
+<div class="todos-list">
+    <div th:each="todo: ${todos}" th:fragment="todos" class="todo line">
+        <div class="id" th:text="${todo.id}">243</div>
+        <div class="title" th:text="${todo.title}"> title</div>
+        <div class="buttons">
+            <button hx-confirm="Are you sure?"
+                    hx-target="closest .todo"
+                    hx-swap="outerHTML"
+                    class="btn btn-danger"
+                    hx-trigger="click"
+                    th:attr="hx-delete=@{/todos/{id}(id=${todo.id})}">
+                Delete
+            </button>
+        </div>
+    </div>
+</div>
+<div id="todos-form" th:fragment="todos-form" hx-swap-oob="true" class="todos-form">
+    <div class="todo line ">
+        <div></div>
+        <div class="title">
+            <input type="text" name="new-todo" id="new-todo"/>
+        </div>
+        <div class="buttons">
+            <button
+                    hx-include="#new-todo"
+                    hx-post="/todos"
+                    hx-target=".todos-list"
+                    hx-trigger="click">
+                Add
+            </button>
+        </div>
+    </div>
+</div>
+<div class="line">
+
+    <button hx-post="/todos/reset"
+            hx-target=".todos-list">
+        Reset All
+    </button>
+</div>
+
+
+</body>
+</html>
