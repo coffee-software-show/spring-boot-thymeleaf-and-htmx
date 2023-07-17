@@ -32,8 +32,6 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    implementation 'io.github.wimdeblauwe:htmx-spring-boot-thymeleaf:2.0.1'
-
 }
 
 tasks.named('test') {
